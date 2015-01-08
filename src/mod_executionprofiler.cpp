@@ -68,6 +68,86 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_newSectionType,
     return SHAREMIND_MODULE_API_0x1_OK;
 }
 
+/**
+ * SysCall: ProcessProfiler_startSection
+ * Args:
+ * 0) p[0]   input uint32, the profiling section type identifier
+ * 1) p[1]   input uint64, the profiling section complexity parameter
+ * 2) ref[0] output uint32, the identifier of the new started profiling section
+ *
+ * \pre There exists a profiling section type identifier usable for creating a
+ *      new profiling section
+ * \post If successful, a new profiling section is started and its identifier is
+ *       output
+ */
+SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_startSection,
+                                 args, num_args, refs, crefs,
+                                 returnValue, c)
+{
+    if (num_args != 2 || ! refs // Mandatory checks
+        // Optional checks:
+        || crefs || returnValue || (assert(refs[0u].pData), refs[1u].pData)
+        || refs[0u].size != sizeof(uint32_t))
+    {
+        return SHAREMIND_MODULE_API_0x1_INVALID_CALL;
+    }
+
+    assert(c);
+    assert(c->moduleHandle);
+    sharemind::ExecutionProfiler & profiler =
+            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
+    try {
+        const uint32_t sectionType = args[0u].uint32[0u];
+        const uint64_t sectionComplexity = args[1u].uint64[0u];
+        uint32_t& sectionId = *static_cast<uint32_t*>(refs[0u].pData);
+
+        sectionId = profiler.startSection<uint32_t>(sectionType,
+                                                    sectionComplexity);
+    } catch (const std::bad_alloc &) {
+        return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
+    } catch (...) {
+        return SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR;
+    }
+
+    return SHAREMIND_MODULE_API_0x1_OK;
+}
+
+/**
+ * SysCall: ProcessProfiler_endSection
+ * Args:
+ *      0) p[0]           input uint32, the identifier of a profiling section
+ *
+ * \pre There exists a started profiling section with identifier SID
+ * \post The profiling section with identifier SID is closed
+ */
+SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_endSection,
+                                 args, num_args, refs, crefs,
+                                 returnValue, c)
+{
+    const sharemind::UsTime endTime = sharemind::getUsTime();
+
+    if (num_args != 1u // Mandatory checks
+        || crefs || refs || returnValue) // Optional checks
+    {
+        return SHAREMIND_MODULE_API_0x1_INVALID_CALL;
+    }
+
+    assert(c);
+    assert(c->moduleHandle);
+    sharemind::ExecutionProfiler & profiler =
+            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
+
+    try {
+        const uint32_t sectionId = args[0u].uint32[0u];
+        profiler.endSection(sectionId, endTime);
+    } catch (const std::bad_alloc &) {
+        return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
+    } catch (...) {
+        return SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR;
+    }
+
+    return SHAREMIND_MODULE_API_0x1_OK;
+}
 
 extern "C" {
 
@@ -113,7 +193,9 @@ SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) {
 SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(
 
     // Misc. syscalls:
-    SAMENAME(ProcessProfiler_newSectionType)
+    SAMENAME(ProcessProfiler_newSectionType),
+    SAMENAME(ProcessProfiler_startSection),
+    SAMENAME(ProcessProfiler_endSection)
 
 );
 

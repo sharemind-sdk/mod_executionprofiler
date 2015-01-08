@@ -23,20 +23,17 @@ ADD_COMPILE_OPTIONS(
   "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
 )
 
-FIND_PACKAGE(SharemindCxxHeaders REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
 FIND_PACKAGE(SharemindLibmodapi REQUIRED)
 FIND_PACKAGE(SharemindVmGlobals REQUIRED)
 
 INCLUDE_DIRECTORIES(
-    ${SharemindCxxHeaders_INCLUDE_DIRS}
     ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
     ${SharemindLibmodapi_INCLUDE_DIRS}
     ${SharemindVmGlobals_INCLUDE_DIRS}
 )
 
 ADD_DEFINITIONS(
-    ${SharemindCxxHeaders_DEFINITIONS}
     ${SharemindLibExecutionProfiler_DEFINITIONS}
     ${SharemindLibmodapi_DEFINITIONS}
     ${SharemindVmGlobals_DEFINITIONS}
@@ -48,7 +45,6 @@ FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/s
 ADD_LIBRARY(sharemind_mod_executionprofiler MODULE ${SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES}
                                             ${SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS})
 TARGET_LINK_LIBRARIES(sharemind_mod_executionprofiler
-    ${SharemindCxxHeaders_LIBRARIES}
     ${SharemindLibExecutionProfiler_LIBRARIES}
     ${SharemindVmGlobals_LIBRARIES}
 )

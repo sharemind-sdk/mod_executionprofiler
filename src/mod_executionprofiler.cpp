@@ -12,7 +12,7 @@
 #include <sharemind/ExecutionProfiler.h>
 #include <sharemind/libmodapi/api_0x1.h>
 #include "CatchModuleApiErrors.h"
- 
+
 extern "C" {
     struct __attribute__ ((visibility("internal"))) ModuleData {
         ModuleData(sharemind::ExecutionProfiler & ep) : executionProfiler(ep) {};

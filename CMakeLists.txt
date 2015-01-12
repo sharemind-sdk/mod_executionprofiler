@@ -23,20 +23,20 @@ ADD_COMPILE_OPTIONS(
   "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
 )
 
+FIND_PACKAGE(SharemindCHeaders REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
 FIND_PACKAGE(SharemindLibmodapi REQUIRED)
-FIND_PACKAGE(SharemindVmGlobals REQUIRED)
 
 INCLUDE_DIRECTORIES(
+    ${SharemindCHeaders_INCLUDE_DIRS}
     ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
     ${SharemindLibmodapi_INCLUDE_DIRS}
-    ${SharemindVmGlobals_INCLUDE_DIRS}
 )
 
 ADD_DEFINITIONS(
+    ${SharemindCHeaders_DEFINITIONS}
     ${SharemindLibExecutionProfiler_DEFINITIONS}
     ${SharemindLibmodapi_DEFINITIONS}
-    ${SharemindVmGlobals_DEFINITIONS}
 )
 
 FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
@@ -45,8 +45,8 @@ FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/s
 ADD_LIBRARY(sharemind_mod_executionprofiler MODULE ${SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES}
                                             ${SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS})
 TARGET_LINK_LIBRARIES(sharemind_mod_executionprofiler
+    ${SharemindCHeaders_LIBRARIES}
     ${SharemindLibExecutionProfiler_LIBRARIES}
-    ${SharemindVmGlobals_LIBRARIES}
 )
 
 INSTALL(TARGETS sharemind_mod_executionprofiler LIBRARY DESTINATION "lib")

@@ -113,6 +113,10 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_startSection,
 
         sectionId = profiler.startSection<uint32_t>(sectionType,
                                                     sectionComplexity);
+
+        // Push this section as parent for next ones:
+        profiler.pushParentSection(sectionId);
+
     } catch (const std::bad_alloc &) {
         return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
     } catch (...) {
@@ -149,6 +153,7 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_endSection,
 
     try {
         const uint32_t sectionId = args[0u].uint32[0u];
+        profiler.popParentSection();
         profiler.endSection(sectionId, endTime);
     } catch (const std::bad_alloc &) {
         return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;

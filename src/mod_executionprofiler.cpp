@@ -164,6 +164,35 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_endSection,
     return SHAREMIND_MODULE_API_0x1_OK;
 }
 
+/**
+ * SysCall: ProcessProfiler_flushLog
+ */
+SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_flushLog,
+                                 args, num_args, refs, crefs,
+                                 returnValue, c)
+{
+    (void) args;
+
+    if (num_args != 0u || crefs || refs || returnValue) {
+        return SHAREMIND_MODULE_API_0x1_INVALID_CALL;
+    }
+
+    assert(c);
+    assert(c->moduleHandle);
+    sharemind::ExecutionProfiler & profiler =
+            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
+
+    try {
+        profiler.processLog();
+    } catch (const std::bad_alloc &) {
+        return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
+    } catch (...) {
+        return SHAREMIND_MODULE_API_0x1_SHAREMIND_ERROR;
+    }
+
+    return SHAREMIND_MODULE_API_0x1_OK;
+}
+
 extern "C" {
 
 
@@ -210,7 +239,8 @@ SHAREMIND_MODULE_API_0x1_SYSCALL_DEFINITIONS(
     // Misc. syscalls:
     SAMENAME(ProcessProfiler_newSectionType),
     SAMENAME(ProcessProfiler_startSection),
-    SAMENAME(ProcessProfiler_endSection)
+    SAMENAME(ProcessProfiler_endSection),
+    SAMENAME(ProcessProfiler_flushLog)
 
 );
 

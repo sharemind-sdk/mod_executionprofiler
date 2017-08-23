@@ -36,18 +36,18 @@ ADD_COMPILE_OPTIONS(
 
 FIND_PACKAGE(SharemindCHeaders REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
-FIND_PACKAGE(SharemindLibmodapi REQUIRED)
+FIND_PACKAGE(SharemindLibModapi REQUIRED)
 
 INCLUDE_DIRECTORIES(
     ${SharemindCHeaders_INCLUDE_DIRS}
     ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
-    ${SharemindLibmodapi_INCLUDE_DIRS}
+    ${SharemindLibModapi_INCLUDE_DIRS}
 )
 
 ADD_DEFINITIONS(
     ${SharemindCHeaders_DEFINITIONS}
     ${SharemindLibExecutionProfiler_DEFINITIONS}
-    ${SharemindLibmodapi_DEFINITIONS}
+    ${SharemindLibModapi_DEFINITIONS}
 )
 
 FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")

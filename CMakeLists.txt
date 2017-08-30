@@ -17,47 +17,63 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
-PROJECT(SHAREMIND_MOD_EXECUTIONPROFILER CXX)
-
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeIncludes/"
-                      ${CMAKE_MODULE_PATH})
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(SharemindModExecutionProfiler VERSION 1.0.0 LANGUAGES CXX)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-ADD_COMPILE_OPTIONS(
-  "-std=c++11" "-Wall" "-Wextra" "-O2" "-fPIC"
-  "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-ggdb>"
-  "$<$<NOT:$<STREQUAL:$<CONFIGURATION>,Release>>:-fno-omit-frame-pointer>"
-  "$<$<STREQUAL:$<CONFIGURATION>,Release>:-DNDEBUG>"
-  "$<$<STREQUAL:$<CONFIGURATION>,Release>:-fomit-frame-pointer>"
-)
+FIND_PACKAGE(SharemindCMakeHelpers REQUIRED)
+
+SharemindSetProjectVersion()
+
 
 FIND_PACKAGE(SharemindCHeaders REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
 FIND_PACKAGE(SharemindLibModapi REQUIRED)
 
-INCLUDE_DIRECTORIES(
-    ${SharemindCHeaders_INCLUDE_DIRS}
-    ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
-    ${SharemindLibModapi_INCLUDE_DIRS}
+
+# The module:
+SharemindSetCxx11CompileOptions()
+FILE(GLOB SharemindModExecutionProfiler_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+FILE(GLOB SharemindModExecutionProfiler_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+SharemindAddSharedLibrary("sharemind_mod_executionprofiler"
+    MODULE
+    SOURCES
+        ${SharemindModExecutionProfiler_SOURCES}
+        ${SharemindModExecutionProfiler_HEADERS}
+    INCLUDE_DIRECTORIES
+        ${SharemindCHeaders_INCLUDE_DIRS}
+        ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
+        ${SharemindLibModapi_INCLUDE_DIRS}
+    LEGACY_DEFINITIONS
+        ${SharemindCHeaders_DEFINITIONS}
+        ${SharemindLibExecutionProfiler_DEFINITIONS}
+        ${SharemindLibModapi_DEFINITIONS}
+    LINK_LIBRARIES
+        ${SharemindCHeaders_LIBRARIES}
+        ${SharemindLibExecutionProfiler_LIBRARIES}
 )
 
-ADD_DEFINITIONS(
-    ${SharemindCHeaders_DEFINITIONS}
-    ${SharemindLibExecutionProfiler_DEFINITIONS}
-    ${SharemindLibModapi_DEFINITIONS}
+
+# Packaging:
+SharemindSetupPackaging()
+SharemindAddComponentPackage("lib"
+    NAME "libsharemind-mod-executionprofiler"
+    DESCRIPTION "Sharemind Execution Profiler module"
+    DEB_SECTION "libs"
+    DEB_DEPENDS
+        "libsharemind-executionprofiler (>= 0.1.0)"
+        "libstdc++6 (>= 4.8.0)"
+        "libc6 (>= 2.19)"
 )
-
-FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-FILE(GLOB SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
-
-ADD_LIBRARY(sharemind_mod_executionprofiler MODULE ${SHAREMIND_MOD_EXECUTIONPROFILER_SOURCES}
-                                            ${SHAREMIND_MOD_EXECUTIONPROFILER_HEADERS})
-TARGET_LINK_LIBRARIES(sharemind_mod_executionprofiler
-    ${SharemindCHeaders_LIBRARIES}
-    ${SharemindLibExecutionProfiler_LIBRARIES}
+SharemindAddComponentPackage("debug"
+    NAME "libsharemind-mod-executionprofiler-dbg"
+    DESCRIPTION "Sharemind Execution Profiler module debug symbols"
+    DEB_SECTION "debug"
+    DEB_DEPENDS
+        "libsharemind-mod-executionprofiler (= ${SharemindModExecutionProfiler_VERSION})"
 )
-
-INSTALL(TARGETS sharemind_mod_executionprofiler LIBRARY DESTINATION "lib")
+SharemindPackagingFinalize()

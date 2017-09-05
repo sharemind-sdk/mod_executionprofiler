@@ -30,7 +30,7 @@ SharemindSetProjectVersion()
 
 FIND_PACKAGE(SharemindCHeaders REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
-FIND_PACKAGE(SharemindLibModapi REQUIRED)
+FIND_PACKAGE(SharemindModuleApis REQUIRED)
 
 
 # The module:
@@ -47,11 +47,10 @@ SharemindAddSharedLibrary("sharemind_mod_executionprofiler"
     INCLUDE_DIRECTORIES
         ${SharemindCHeaders_INCLUDE_DIRS}
         ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
-        ${SharemindLibModapi_INCLUDE_DIRS}
+        ${SharemindModuleApis_INCLUDE_DIRS}
     LEGACY_DEFINITIONS
         ${SharemindCHeaders_DEFINITIONS}
         ${SharemindLibExecutionProfiler_DEFINITIONS}
-        ${SharemindLibModapi_DEFINITIONS}
     LINK_LIBRARIES
         ${SharemindCHeaders_LIBRARIES}
         ${SharemindLibExecutionProfiler_LIBRARIES}

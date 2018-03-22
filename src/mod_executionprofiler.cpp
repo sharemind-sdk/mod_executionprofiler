@@ -25,7 +25,7 @@
 
 extern "C" {
     struct __attribute__ ((visibility("internal"))) ModuleData {
-        ModuleData(sharemind::ExecutionProfiler & ep) : executionProfiler(ep) {};
+        ModuleData(sharemind::ExecutionProfiler & ep) : executionProfiler(ep) {}
         sharemind::ExecutionProfiler &executionProfiler;
     };
 }

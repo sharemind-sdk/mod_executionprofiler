@@ -48,8 +48,9 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_newSectionType,
 
     if (!crefs || !refs // Mandatory checks
         // Optional checks:
-        || num_args || returnValue || (assert(crefs[0u].pData), crefs[1u].pData)
-        || (assert(refs[0u].pData), refs[1u].pData)
+        || num_args || returnValue
+        || (static_cast<void>(assert(crefs[0u].pData)), crefs[1u].pData)
+        || (static_cast<void>(assert(refs[0u].pData)), refs[1u].pData)
         || refs[0u].size != sizeof (uint32_t))
     {
         return SHAREMIND_MODULE_API_0x1_INVALID_CALL;
@@ -96,7 +97,8 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_startSection,
 {
     if (num_args != 2 || ! refs // Mandatory checks
         // Optional checks:
-        || crefs || returnValue || (assert(refs[0u].pData), refs[1u].pData)
+        || crefs || returnValue
+        || (static_cast<void>(assert(refs[0u].pData)), refs[1u].pData)
         || refs[0u].size != sizeof(uint32_t))
     {
         return SHAREMIND_MODULE_API_0x1_INVALID_CALL;

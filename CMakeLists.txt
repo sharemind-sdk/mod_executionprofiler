@@ -73,6 +73,6 @@ SharemindAddComponentPackage("debug"
     DESCRIPTION "Sharemind Execution Profiler module debug symbols"
     DEB_SECTION "debug"
     DEB_DEPENDS
-        "libsharemind-mod-executionprofiler (= ${SharemindModExecutionProfiler_VERSION})"
+        "libsharemind-mod-executionprofiler (= ${SharemindModExecutionProfiler_DEB_lib_PACKAGE_VERSION})"
 )
 SharemindPackagingFinalize()

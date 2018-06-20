@@ -28,7 +28,7 @@ FIND_PACKAGE(SharemindCMakeHelpers 1.2 REQUIRED)
 SharemindSetProjectVersion()
 
 
-FIND_PACKAGE(SharemindCHeaders REQUIRED)
+FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
 FIND_PACKAGE(SharemindModuleApis REQUIRED)
 

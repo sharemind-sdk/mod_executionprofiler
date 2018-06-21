@@ -29,7 +29,7 @@ SharemindSetProjectVersion()
 
 
 FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
-FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
+FIND_PACKAGE(SharemindLibExecutionProfiler 0.2.0 REQUIRED)
 FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
 
 
@@ -64,7 +64,7 @@ SharemindAddComponentPackage("lib"
     DESCRIPTION "Sharemind Execution Profiler module"
     DEB_SECTION "libs"
     DEB_DEPENDS
-        "libsharemind-executionprofiler (>= 0.1.0)"
+        "libsharemind-executionprofiler (>= 0.2.0)"
         "libstdc++6 (>= 4.8.0)"
         "libc6 (>= 2.19)"
 )

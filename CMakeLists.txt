@@ -18,19 +18,19 @@
 #
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
-PROJECT(SharemindModExecutionProfiler VERSION 1.0.0 LANGUAGES CXX)
+PROJECT(SharemindModExecutionProfiler VERSION 1.0.1 LANGUAGES CXX)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers REQUIRED)
+FIND_PACKAGE(SharemindCMakeHelpers 1.2 REQUIRED)
 
 SharemindSetProjectVersion()
 
 
-FIND_PACKAGE(SharemindCHeaders REQUIRED)
-FIND_PACKAGE(SharemindLibExecutionProfiler REQUIRED)
-FIND_PACKAGE(SharemindModuleApis REQUIRED)
+FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
+FIND_PACKAGE(SharemindLibExecutionProfiler 0.2.0 REQUIRED)
+FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
 
 
 # The module:
@@ -64,7 +64,7 @@ SharemindAddComponentPackage("lib"
     DESCRIPTION "Sharemind Execution Profiler module"
     DEB_SECTION "libs"
     DEB_DEPENDS
-        "libsharemind-executionprofiler (>= 0.1.0)"
+        "libsharemind-executionprofiler (>= 0.2.0)"
         "libstdc++6 (>= 4.8.0)"
         "libc6 (>= 2.19)"
 )

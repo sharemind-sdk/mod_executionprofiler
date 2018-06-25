@@ -58,7 +58,7 @@ SharemindAddSharedLibrary("sharemind_mod_executionprofiler"
 
 
 # Packaging:
-SharemindSetupPackaging(DEB_VENDOR_VERSION "2")
+SharemindSetupPackaging()
 SharemindAddComponentPackage("lib"
     NAME "libsharemind-mod-executionprofiler"
     DESCRIPTION "Sharemind Execution Profiler module"

@@ -18,14 +18,12 @@
 #
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
-PROJECT(SharemindModExecutionProfiler VERSION 1.0.1 LANGUAGES CXX)
+PROJECT(SharemindModExecutionProfiler VERSION 1.0.2 LANGUAGES CXX)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.2 REQUIRED)
-
-SharemindSetProjectVersion()
+FIND_PACKAGE(SharemindCMakeHelpers 1.3 REQUIRED)
 
 
 FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)

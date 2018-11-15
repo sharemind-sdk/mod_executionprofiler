@@ -32,7 +32,7 @@ FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
 
 
 # The module:
-SharemindSetCxx11CompileOptions()
+SharemindSetCxx14CompileOptions()
 FILE(GLOB SharemindModExecutionProfiler_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 FILE(GLOB SharemindModExecutionProfiler_HEADERS

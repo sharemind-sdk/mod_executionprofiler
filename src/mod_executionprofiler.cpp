@@ -23,11 +23,13 @@
 #include <sharemind/module-apis/api_0x1.h>
 #include "CatchModuleApiErrors.h"
 
-extern "C" {
-    struct __attribute__ ((visibility("internal"))) ModuleData {
-        ModuleData(sharemind::ExecutionProfiler & ep) : executionProfiler(ep) {}
-        sharemind::ExecutionProfiler &executionProfiler;
-    };
+sharemind::ExecutionProfiler & getProfiler(
+        SharemindModuleApi0x1SyscallContext * ctx)
+{
+        auto * profiler = static_cast<sharemind::ExecutionProfiler *>(
+                ctx->processFacility(ctx, "Profiler"));
+        assert(profiler);
+        return *profiler;
 }
 
 /**
@@ -60,16 +62,13 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_newSectionType,
         return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
 
     assert(c);
-    assert(c->moduleHandle);
-    sharemind::ExecutionProfiler & executionProfiler =
-            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
 
     try {
         const char * sectionTypeName =
                 static_cast<const char*>(crefs[0u].pData);
 
         uint32_t & sectionType = *static_cast<uint32_t*>(refs[0u].pData);
-        sectionType = executionProfiler.newSectionType(sectionTypeName);
+        sectionType = getProfiler(c).newSectionType(sectionTypeName);
     } catch (const std::bad_alloc &) {
         return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
     } catch (...) {
@@ -105,9 +104,7 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_startSection,
     }
 
     assert(c);
-    assert(c->moduleHandle);
-    sharemind::ExecutionProfiler & profiler =
-            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
+    sharemind::ExecutionProfiler & profiler = getProfiler(c);
     try {
         const uint32_t sectionType = args[0u].uint32[0u];
         const uint64_t sectionComplexity = args[1u].uint64[0u];
@@ -149,9 +146,7 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_endSection,
     }
 
     assert(c);
-    assert(c->moduleHandle);
-    sharemind::ExecutionProfiler & profiler =
-            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
+    sharemind::ExecutionProfiler & profiler = getProfiler(c);
 
     try {
         const uint32_t sectionId = args[0u].uint32[0u];
@@ -180,12 +175,9 @@ SHAREMIND_MODULE_API_0x1_SYSCALL(ProcessProfiler_flushLog,
     }
 
     assert(c);
-    assert(c->moduleHandle);
-    sharemind::ExecutionProfiler & profiler =
-            static_cast<const ModuleData *>( c->moduleHandle)->executionProfiler;
 
     try {
-        profiler.processLog();
+        getProfiler(c).processLog();
     } catch (const std::bad_alloc &) {
         return SHAREMIND_MODULE_API_0x1_OUT_OF_MEMORY;
     } catch (...) {
@@ -207,16 +199,9 @@ SHAREMIND_MODULE_API_0x1_INITIALIZER(c) __attribute__ ((visibility("default")));
 SHAREMIND_MODULE_API_0x1_INITIALIZER(c) {
     assert(c);
 
-    const SharemindModuleApi0x1Facility * fexecutionprofiler
-            = c->getModuleFacility(c, "Profiler");
-    if (!fexecutionprofiler || !fexecutionprofiler->facility)
-        return SHAREMIND_MODULE_API_0x1_MISSING_FACILITY;
-
-    sharemind::ExecutionProfiler * executionProfilerFacility =
-        static_cast<sharemind::ExecutionProfiler *>(fexecutionprofiler->facility);
     try {
-
-        c->moduleHandle = new ModuleData(*executionProfilerFacility);
+        // Note: moduleHandle needs to be initialized to something
+        c->moduleHandle = reinterpret_cast<void *>(0xdeadbeef);
         return SHAREMIND_MODULE_API_0x1_OK;
     } catch (...) {
         return catchModuleApiErrors();
@@ -228,7 +213,6 @@ SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c)
 SHAREMIND_MODULE_API_0x1_DEINITIALIZER(c) {
     assert(c);
     assert(c->moduleHandle);
-    delete static_cast<ModuleData *>(c->moduleHandle);
     #ifndef NDEBUG
     c->moduleHandle = nullptr; // Not needed, but may help debugging.
     #endif

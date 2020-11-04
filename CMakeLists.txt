@@ -23,12 +23,11 @@ PROJECT(SharemindModExecutionProfiler VERSION 1.0.3 LANGUAGES CXX)
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.4 REQUIRED)
+FIND_PACKAGE(SharemindCMakeHelpers 1.6 REQUIRED)
 
-
-FIND_PACKAGE(SharemindCHeaders 1.1.0 REQUIRED)
-FIND_PACKAGE(SharemindLibExecutionProfiler 0.2.0 REQUIRED)
-FIND_PACKAGE(SharemindModuleApis 1.0.0 REQUIRED)
+FIND_PACKAGE(SharemindCHeaders 1.3.0 REQUIRED)
+FIND_PACKAGE(SharemindLibExecutionProfiler 0.4.0 REQUIRED)
+FIND_PACKAGE(SharemindModuleApis 1.1.0 REQUIRED)
 
 
 # The module:
@@ -37,22 +36,19 @@ FILE(GLOB SharemindModExecutionProfiler_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 FILE(GLOB SharemindModExecutionProfiler_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
-SharemindAddSharedLibrary("sharemind_mod_executionprofiler"
+SharemindAddSharedLibrary(ModExecutionProfiler
     MODULE
+    OUTPUT_NAME "sharemind_mod_executionprofiler"
     SOURCES
         ${SharemindModExecutionProfiler_SOURCES}
         ${SharemindModExecutionProfiler_HEADERS}
-    INCLUDE_DIRECTORIES
-        ${SharemindCHeaders_INCLUDE_DIRS}
-        ${SharemindLibExecutionProfiler_INCLUDE_DIRS}
-        ${SharemindModuleApis_INCLUDE_DIRS}
-    LEGACY_DEFINITIONS
-        ${SharemindCHeaders_DEFINITIONS}
-        ${SharemindLibExecutionProfiler_DEFINITIONS}
-    LINK_LIBRARIES
-        ${SharemindCHeaders_LIBRARIES}
-        ${SharemindLibExecutionProfiler_LIBRARIES}
 )
+TARGET_LINK_LIBRARIES(ModExecutionProfiler
+    PRIVATE
+        Sharemind::CHeaders
+        Sharemind::LibExecutionProfiler
+        Sharemind::ModuleApis
+    )
 
 # Configuration files:
 INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/packaging/configs/sharemind/"
@@ -67,7 +63,7 @@ SharemindAddComponentPackage("lib"
     DESCRIPTION "Sharemind Execution Profiler module"
     DEB_SECTION "libs"
     DEB_DEPENDS
-        "libsharemind-executionprofiler (>= 0.2.0)"
+        "libsharemind-executionprofiler (>= 0.4.0)"
         "libstdc++6 (>= 4.8.0)"
         "libc6 (>= 2.19)"
     DEB_EXTRA_CONTROL_FILES

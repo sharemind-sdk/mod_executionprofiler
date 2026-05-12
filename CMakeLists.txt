@@ -17,7 +17,7 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 PROJECT(SharemindModExecutionProfiler VERSION 1.2.0 LANGUAGES CXX)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)

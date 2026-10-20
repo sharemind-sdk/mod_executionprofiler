@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 Cybernetica
+# Copyright (C) Cybernetica
 #
 # Research/Commercial License Usage
 # Licensees holding a valid Research License or Commercial License
@@ -18,12 +18,12 @@
 #
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
-PROJECT(SharemindModExecutionProfiler VERSION 1.2.0 LANGUAGES CXX)
+PROJECT(SharemindModExecutionProfiler VERSION 1.2.1 LANGUAGES CXX)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
-FIND_PACKAGE(SharemindCMakeHelpers 1.6 REQUIRED)
+FIND_PACKAGE(SharemindCMakeHelpers 1.8 REQUIRED)
 
 FIND_PACKAGE(SharemindCHeaders 1.3.0 REQUIRED)
 FIND_PACKAGE(SharemindLibExecutionProfiler 0.5.0 REQUIRED)
